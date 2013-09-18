@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+   <title>nodejs - facebook</title>
+</head>
+<body>
+	<div>
+           <button id="login">Login</button>
+           <button id="logout">Logout</button>
+	</div>
+    <br>
+    <span id="user-info" style="border:1px solid #888"></span>
+    <span id="fb-root"></span>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+    <script src="http://connect.facebook.net/en_US/all.js"></script>
+    <script>
+        
+        FB.init({
+            appId      : '437387606378028',         // App ID from the app dashboard
+            channelUrl : '//127.0.0.1:8080',        // Channel file for x-domain comms
+            status     : true,                      // Check Facebook Login status
+            xfbml      : true                       // Look for social plugins on the page
+        });
+
+        FB.getLoginStatus(function(response) {
+            console.log(response);
+            if (response.authResponse) {
+                console.log("Pass");
+                $('#login').hide();
+
+                FB.api('/me', function(response) {    
+                    console.log(response.id + ' : ' + response.name);
+                });
+            } else {
+                console.log("Not Pass");
+                $('#logout').hide();
+            }
+         });
+
+        $('#login').bind('click', function() {
+            FB.login(function(response) {
+                console.log(response);
+                if (response.authResponse) {
+                    console.log("Pass");
+                    $('#login').hide();
+                    $('#logout').show();
+
+                    FB.api('/me', function(response) {    
+                        console.log(response.id + ' : ' + response.name);
+                    });
+                } else {
+                    console.log("Not Pass");
+                }
+            });
+        });
+
+        $('#logout').bind('click', function() {
+            FB.logout(function(response){
+                console.log(response);
+            });
+        });
+
+       
+    </script>
+</body>
+</html>
